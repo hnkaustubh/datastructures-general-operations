@@ -140,4 +140,25 @@ public class LinkedList {
         }
         return prev;
     }
+
+    public boolean isOddDuplicates(Node head){
+        Hashtable<Integer,Integer> ht = new Hashtable<Integer,Integer>();
+        Node current = head;
+
+        while(current != null){
+            ht.put(current.data, ht.containsKey(current.data) ? ht.get(current.data)+1 : 1);
+            current = current.next;
+        }
+        LinkedList list = new LinkedList();
+        Set<Integer> keys = ht.keySet();
+
+        for(int key: keys){
+            if(ht.get(key) > 1)
+                list.head = list.insert(list.head, ht.get(key));
+        }
+
+        if((length(list.head) % 2 )== 0)
+            return false;
+        return true;
+    }
 }
