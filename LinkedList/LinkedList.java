@@ -161,4 +161,45 @@ public class LinkedList {
             return false;
         return true;
     }
+
+    public Node mergePoint(Node head1, Node head2){
+        int length1 = length(head1);
+        int length2 = length(head2);
+        Node mergePoint = null;
+
+        int length = Math.abs(length1 - length2);
+
+        if(length1 > length2){
+            Node current1 = head1;
+            Node current2 = head2;
+
+            for(int i=0; i<length; i++)
+                current1 = current1.next;
+
+            while(current1 != null && current2 != null){
+                if(current1 == current2) {
+                    mergePoint = current1;
+                    return mergePoint;
+                }
+                else {
+                    current1 = current1.next;
+                    current2 = current2.next;
+                }
+            }
+        }else{
+            Node current1 = head1;
+            Node current2 = head2;
+
+            for(int i=0; i<length; i++)
+                current2 = current2.next;
+
+            while(current1 != null && current2 != null){
+                if(current1 == current2)
+                    mergePoint = current2;
+                current1 = current1.next;
+                current2 = current2.next;
+            }
+        }
+        return mergePoint;
+    }
 }
