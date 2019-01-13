@@ -1,4 +1,5 @@
 package org.launchcode;
+import java.util.List;
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
@@ -71,8 +72,7 @@ public class BinarySearchTree {
         Stack<Node> stack = new Stack<Node>();
 
         if(root == null)
-            return;;
-
+            return;
         while(true){
             if(root != null){
                 stack.push(root);
@@ -95,7 +95,7 @@ public class BinarySearchTree {
         preOrderRecursive(root.right);
     }
 
-    public void preOrderIterative(Node root){
+   public void preOrderIterative(Node root){
         Stack<Node> stack = new Stack<Node>();
         stack.push(root);
 
@@ -109,7 +109,7 @@ public class BinarySearchTree {
             if(root.left != null)
                 stack.push(root.left);
         }
-    }
+   }
 
     public void postOrderRecursive(Node root){
         if(root == null)
@@ -132,12 +132,11 @@ public class BinarySearchTree {
                 stack1.push(root.left);
 
             if(root.right != null)
-                stack2.push(root.rigjt);
+                stack1.push(root.right);
         }
-
-        while(!stack2.isEmpty()) {
+        while(!stack2.isEmpty()){
             root = stack2.pop();
-            System.out.println(root.data + " ");
+            System.out.print(root.data + " ");
         }
     }
 
@@ -157,7 +156,7 @@ public class BinarySearchTree {
         }
     }
 
-    public void levelByLevelPrint(Node head){
+    public void levelByLevelPrint(Node root){
         Queue<Node> q1 = new LinkedList<Node>();
         Queue<Node> q2 = new LinkedList<Node>();
         q1.add(root);
@@ -165,7 +164,7 @@ public class BinarySearchTree {
         while(!q1.isEmpty() || !q2.isEmpty()){
             while(!q1.isEmpty()){
                 root = q1.poll();
-                System.out.print(root.data +" ");
+                System.out.print(root.data + " ");
 
                 if(root.left != null)
                     q2.add(root.left);
@@ -176,7 +175,7 @@ public class BinarySearchTree {
             System.out.println();
             while(!q2.isEmpty()){
                 root = q2.poll();
-                System.out.print(root.data +" ");
+                System.out.print(root.data + " ");
 
                 if(root.left != null)
                     q1.add(root.left);
@@ -205,7 +204,10 @@ public class BinarySearchTree {
     }
 
     public Node inOrderSuccessor(Node root, int data){
-        Node current = root;
+        if(root == null)
+            return null;
+
+        Node current = findNode(root, data);
 
         if(current.right != null)
             return minimumNode(current.right);
@@ -213,7 +215,7 @@ public class BinarySearchTree {
         Node ancestor = root;
 
         while(current != ancestor){
-            if(current.data <= ancestor.data){
+            if(current.data < ancestor.data){
                 successor = ancestor;
                 ancestor = ancestor.left;
             }else
@@ -225,12 +227,11 @@ public class BinarySearchTree {
     public Node lowestCommonAncestor(Node root, int data1, int data2){
         if(root == null)
             return null;
-        else if(root.data > data1 && root.data > data2)
+        if(root.data > data1 && root.data > data2)
             return lowestCommonAncestor(root.left, data1, data2);
         else if(root.data < data1 && root.data < data2)
             return lowestCommonAncestor(root.right, data1, data2);
-        else
-            return root;
+        return root;
     }
 
     public boolean isBST(Node root, int min, int max){
@@ -238,7 +239,7 @@ public class BinarySearchTree {
             return true;
         else if(root.data < min || root.data > max)
             return false;
-        return isBST(root.left, min, root.data) && isBST(root.right, root.data, max);
+        return isBST(root.left, min, root.data) || isBST(root.right, root.data, max);
     }
 
     public int maximum(int data1, int data2){
@@ -249,13 +250,11 @@ public class BinarySearchTree {
     }
 
     public int heightOfTree(Node root){
-        int leftHeight, rightHeight;
         if(root == null)
             return 0;
-        leftHeight = heightOfTree(root.left);
-        rightHeight = heightOfTree(root.right);
-
-        return 1+ maximum(leftHeight, rightHeight);
+        int left = heightOfTree(root.left);
+        int right = heightOfTree(root.right);
+        return maximum(left,right) + 1;
     }
 
     public boolean isBalanced(Node root){
@@ -268,6 +267,7 @@ public class BinarySearchTree {
             return true;
         return false;
     }
+
     Stack<Node> stack = new Stack<Node>();
 
     public void find_root_to_leaf_paths(Node root){
@@ -284,5 +284,57 @@ public class BinarySearchTree {
 
     public void print_stack(){
 
+    }
+
+    public boolean root_to_leaf_path_sum(Node root, int sum, List<Integer> result){
+        if(root == null)
+            return false;
+        if(root.left == null && root.right == null){
+            if(root.data == sum){
+                result.add(root.data);
+                return true;
+            }else
+                return false;
+        }
+        if(root_to_leaf_path_sum(root.left, sum-root.data, result)){
+            result.add(root.data);
+            return true;
+        }
+        if(root_to_leaf_path_sum(root.right, sum-root.data, result)){
+            result.add(root.data);
+            return true;
+        }
+        return false;
+    }
+
+    public Node concatenate(Node a, Node b){
+        if(a == null)
+            return b;
+        if(b == null)
+            return a;
+
+        Node aEnd = a.left;
+        Node bEnd = b.right;
+
+        a.left = bEnd;
+        bEnd.right = a;
+        aEnd.right = b;
+        b.left = aEnd;
+        return a;
+    }
+
+    public Node treeToList(Node n){
+        if(n == null)
+            return n;
+        Node leftList = treeToList(n.left);
+        Node rightList = treeToList(n.right);
+
+        n.left = n;
+        n.right = n;
+
+        n = concatenate(leftList, n);
+        n = concatenate(n, rightList);
+
+        return n;
     }
 }
