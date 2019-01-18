@@ -359,4 +359,39 @@ public class BinarySearchTree {
             return true;
         return isSubtree(root1.left, root2) || isSubtree(root1.right, root2);
     }
+
+    public Node mirror(Node root){
+        if(root == null)
+            return null;
+
+        Node left = mirror(root.left);
+        Node right = mirror(root.right);
+
+        left.right = right;
+        right.left = left;
+
+        return root;
+    }
+
+    Node head;
+    static Node prev = null;
+
+    public Node TreeToDoublyList(Node root){
+        if(root == null)
+            return null;
+
+        TreeToDoublyList(root.left);
+
+        if(prev == null)
+            head = root;
+        else{
+            root.left = prev;
+            prev.right = root;
+        }
+        prev = root;
+
+        TreeToDoublyList(root.right);
+
+        return root;
+    }
 }
