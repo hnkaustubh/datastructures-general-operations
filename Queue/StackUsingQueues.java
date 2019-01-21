@@ -6,14 +6,29 @@ public class StackUsingTwoQueues {
     Queue q2 = new Queue();
 
     public void push(int data) {
-        q1.enQueue(data);
+        if(q1.isEmpty() && q2.isEmpty())
+            q1.enQueue(data);
+        else if(q1.isEmpty())
+            q2.enQueue(data);
+        else if(q2.isEmpty())
+            q1.enQueue(data);
     }
 
     public int pop() {
-        while (!(q1.front == q1.rear)) {
-            q2.enQueue(q1.deQueue());
+        int data;
+
+        if(!q1.isEmpty()) {
+            while (!(q1.front == q1.rear)) {
+                q2.enQueue(q1.deQueue());
+            }
+            data = q1.deQueue();
+        }else{
+            while (!(q2.front == q2.rear)) {
+                q1.enQueue(q2.deQueue());
+            }
+            data = q2.deQueue();
         }
-        return q1.deQueue();
+        return data;
     }
 
     public void print() {
