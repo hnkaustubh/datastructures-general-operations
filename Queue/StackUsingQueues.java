@@ -1,48 +1,38 @@
 package org.launchcode;
 
-public class StackUsingQueues {
+public class StackUsingTwoQueues {
+    Node top;
     Queue q1 = new Queue();
     Queue q2 = new Queue();
 
-
-    public void push(int data){
-        if(q1.isEmpty() && q2.isEmpty())
-            q1.enQueue(data);
-        else if(!q1.isEmpty())
-            q1.enQueue(data);
-        else if(!q2.isEmpty())
-            q2.enQueue(data);
+    public void push(int data) {
+        q1.enQueue(data);
     }
 
-    public int pop(){
-        if(q1.isEmpty()){
-            if(q2.isEmpty()){
-                System.out.print("Error");
-            }else{
-                while(!(q2.front == q2.rear)){
-                    int x = q2.deQueue();
-                    q1.enQueue(x);
-                }
-            }
-            return q2.deQueue();
-        }else{
-            while(!(q1.front == q1.rear)) {
-                int x = q1.deQueue();
-                q2.enQueue(x);
-            }
+    public int pop() {
+        while (!(q1.front == q1.rear)) {
+            q2.enQueue(q1.deQueue());
         }
         return q1.deQueue();
     }
 
-    public void print(){
-        if(q1.isEmpty()){
-            if(q2.isEmpty()){
-                System.out.print("Error");
-            }else{
-                q2.print();
+    public void print() {
+        int data;
+        if (q1.isEmpty()) {
+            Node current = q2.front;
+
+            while (current != null) {
+                System.out.println(current.data);
+                current = current.next;
             }
-        }else{
-            q1.print();
+        } else {
+            Node current = q1.front;
+
+            while (current != null) {
+                System.out.println(current.data);
+                current = current.next;
+            }
         }
     }
 }
+
