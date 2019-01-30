@@ -394,4 +394,28 @@ public class BinarySearchTree {
 
         return root;
     }
+
+    public int lengthUtil(Node root, int min, int max, int current) {
+        if(root == null)
+            return 0;
+
+        lengthUtil(root.left, min, max, current-1);
+
+        if(min > current)
+            min = current;
+
+        if(max < current)
+            max = current;
+
+        lengthUtil(root.right, min, max, current+1);
+
+        return Math.abs(min) + max;
+    }
+
+    public int getVerticalWidth(Node root) {
+        int min=0, max=0;
+
+        int length = lengthUtil(root, min, max, 0);
+        return length + 1;
+    }
 }
